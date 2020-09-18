@@ -44,6 +44,32 @@ class LocationsDataContainer extends EventEmitter {
 
     return filterByRegExp(this.data, query);
   }
+
+  getFranchiseeCountPerCountry() {
+    const franchiseeCountPerCountry = {};
+
+    for (const franchisee of this.data) {
+      const franchiseeCountryCode = franchisee.countryCode;
+
+      if (franchiseeCountPerCountry[franchiseeCountryCode] === undefined) {
+        franchiseeCountPerCountry[franchiseeCountryCode] = 1;
+      } else {
+        franchiseeCountPerCountry[franchiseeCountryCode] =
+          franchiseeCountPerCountry[franchiseeCountryCode] + 1;
+      }
+    }
+
+    /**
+     note for Loris :
+     if there is not need to count, we can use the interesting _.groupBy() function :
+      const franchiseesByCountry = _.groupBy(
+        this.data,
+        franchisee => franchisee.countryCode
+      );
+     */
+
+    return franchiseeCountPerCountry; // ex: { "FR" : 890, "AN" : 2, "GB": 3 };
+  }
 }
 
 const db = new LocationsDataContainer();

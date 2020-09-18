@@ -7,6 +7,7 @@ import logQuery from './middlewares/log-query';
 import ipRateLimiter from './middlewares/ip-rate-limiter';
 import postalCodesRouter from './routes/postal-codes';
 import locationsRouter from './routes/locations';
+import franchiseeByCountryRouter from './routes/franchisee-by-country';
 
 const port = process.env.PORT || 4000;
 
@@ -24,6 +25,7 @@ app.use(ipRateLimiter);
 
 app.get('/locations', locationsRouter);
 app.get('/postal-codes', postalCodesRouter);
+app.get('/franchisee-by-country', franchiseeByCountryRouter);
 
 app.use(handleError);
 
