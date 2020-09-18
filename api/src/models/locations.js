@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import filterByRegExp from '../lib/filter-by-reg-exp';
 import logger from '../lib/logger';
+import postalCodesDb from './postal-codes';
 
 class LocationsDataContainer extends EventEmitter {
   constructor() {
@@ -41,8 +42,22 @@ class LocationsDataContainer extends EventEmitter {
 
   find(query) {
     this.assertInitialized();
+    const regExpFilteredFranchisees = filterByRegExp(this.data, query);
 
-    return filterByRegExp(this.data, query);
+    const postalCodes = postalCodesDb.data;
+
+    const isPostalCodeAndCountryCodeInPostalCodesFilter = franchisee => {
+      return postalCodes.some(postalCode => {
+        return (
+          postalCode.postalCode === franchisee.postalCode &&
+          postalCode.countryCode === franchisee.countryCode
+        );
+      });
+    };
+
+    return regExpFilteredFranchisees.filter(
+      isPostalCodeAndCountryCodeInPostalCodesFilter
+    );
   }
 
   getFranchiseeCountPerCountry() {
